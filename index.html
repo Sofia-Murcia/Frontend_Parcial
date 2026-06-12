@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restaurante XYZ — Acceso</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="pagina">
+    <div class="panel-izq">
+        <div class="linea-dorada"></div>
+        <h1>Restaurante<br /><span>XYZ</span></h1>
+        <p>Sistema de gestión de reservas, mesas y pedidos para el equipo del restaurante.</p>
+        <div class="decoracion-menu">
+            <div class="item-menu">Gestión de mesas</div>
+            <div class="item-menu">Reservas de clientes</div>
+            <div class="item-menu">Control de pedidos</div>
+            <div class="item-menu">Menú y productos</div>
+        </div>
+    </div>
+    <div class="panel-der">
+        <div class="caja-login">
+            <p class="eyebrow">Sistema de acceso</p>
+            <h2>Iniciar sesión</h2>
+            <div class="campo">
+                <label for="usuario">Usuario o correo</label>
+                <input type="text" id="usuario" placeholder="admin" autocomplete="username" />
+            </div>
+            <div class="campo">
+                <label for="contrasena">Contraseña</label>
+                <input type="password" id="contrasena" placeholder="••••••••" autocomplete="current-password" />
+            </div>
+            <button class="btn-ingresar" id="btnLogin" onclick="login()">Ingresar</button>
+            <div class="mensaje" id="mensaje"></div>
+        </div>
+    </div>
+</div>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+    if (localStorage.getItem('token')) window.location.href = 'pages/mesas.html';
+    document.getElementById('contrasena').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+    document.getElementById('usuario').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+</script>
+</body>
+</html>

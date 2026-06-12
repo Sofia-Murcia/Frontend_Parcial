@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pedidos — Restaurante XYZ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="nombre">Restaurante <span>XYZ</span></div>
+            <div class="subtitulo">Panel de gestión</div>
+        </div>
+        <nav>
+            <a href="mesas.html"    class="nav-item"><span class="icono">🪑</span> Mesas</a>
+            <a href="reservas.html" class="nav-item"><span class="icono">📅</span> Reservas</a>
+            <a href="productos.html"class="nav-item"><span class="icono">🍽️</span> Productos</a>
+            <a href="pedidos.html"  class="nav-item activo"><span class="icono">🧾</span> Pedidos</a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="usuario-info">
+                <div class="nombre-usr" id="nombreUsuario">—</div>
+                <div class="rol-usr"    id="rolUsuario">—</div>
+            </div>
+            <button class="btn-logout" onclick="logout()"><span class="icono">🚪</span> Cerrar sesión</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="page-header">
+            <div>
+                <h1>Pedidos</h1>
+                <p>Gestiona los pedidos de las mesas</p>
+            </div>
+            <button class="btn btn-primary" onclick="abrirCrear()">+ Nuevo pedido</button>
+        </div>
+
+        <div class="filtros">
+            <select id="filtroEstado" onchange="cargarPedidos()">
+                <option value="">Todos los estados</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="en_preparacion">En preparación</option>
+                <option value="entregado">Entregado</option>
+                <option value="pagado">Pagado</option>
+                <option value="cancelado">Cancelado</option>
+            </select>
+        </div>
+
+        <div class="card">
+            <div class="tabla-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mesa</th>
+                            <th>Fecha y hora</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaPedidos">
+                        <tr><td colspan="6" class="vacio"><div class="icono-vacio">⏳</div><p>Cargando...</p></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal-overlay oculto" id="modalCrear">
+    <div class="modal modal-ancho">
+        <div class="modal-header">
+            <h3>Nuevo pedido</h3>
+            <button class="modal-close" onclick="cerrarModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="formPedido" onsubmit="event.preventDefault()">
+                <div class="campo">
+                    <label>Mesa *</label>
+                    <select id="mesa_id" required>
+                        <option value="">Cargando mesas...</option>
+                    </select>
+                </div>
+
+                <div class="carrito-seccion">
+                    <p class="carrito-titulo">Agregar productos</p>
+                    <div class="carrito-fila">
+                        <div class="campo">
+                            <select id="selectProducto">
+                                <option value="">Seleccionar producto</option>
+                            </select>
+                        </div>
+                        <div class="campo">
+                            <input type="number" id="cantidadProducto" value="1" min="1" class="campo-cantidad" />
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="agregarAlCarrito()">+</button>
+                    </div>
+                </div>
+
+                <div class="carrito-seccion">
+                    <p class="carrito-titulo">Resumen del pedido</p>
+                    <div id="carritoItems"></div>
+                    <div class="carrito-total-fila">
+                        <span>Total:</span>
+                        <span class="carrito-total-monto" id="totalCarrito">$0</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn btn-primary"   onclick="crearPedido()">Crear pedido</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay oculto" id="modalDetalle">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Detalle del pedido</h3>
+            <button class="modal-close" onclick="cerrarModal()">✕</button>
+        </div>
+        <div class="modal-body" id="detalleContenido"></div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="cerrarModal()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay oculto" id="modalEstado">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Cambiar estado del pedido</h3>
+            <button class="modal-close" onclick="cerrarModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="campo">
+                <label>Nuevo estado</label>
+                <select id="nuevoEstado">
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en_preparacion">En preparación</option>
+                    <option value="entregado">Entregado</option>
+                    <option value="pagado">Pagado</option>
+                    <option value="cancelado">Cancelado</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn btn-primary"   onclick="cambiarEstado()">Actualizar</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/pedidos.js"></script>
+<script>
+    verificarSesion();
+    const usr = getUsuario();
+    if (usr) {
+        document.getElementById('nombreUsuario').textContent = usr.nombre;
+        document.getElementById('rolUsuario').textContent    = usr.rol;
+    }
+    cargarPedidos();
+</script>
+</body>
+</html>
