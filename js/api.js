@@ -1,8 +1,8 @@
 const API = {
-    auth:      'http://127.0.0.1:8000',
-    productos: 'http://127.0.0.1:8001',
-    reservas:  'http://127.0.0.1:8002',
-    pedidos:   'http://127.0.0.1:8003',
+    auth:      'http://127.0.0.1:8001',
+    reservas: 'http://127.0.0.1:8002',
+    productos:  'http://127.0.0.1:8003',
+    pedidos:   'http://127.0.0.1:8004',
 };
 
 async function apiFetch(url, opciones = {}) {
